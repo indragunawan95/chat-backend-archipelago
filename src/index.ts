@@ -2,18 +2,21 @@ import express from 'express';
 import { createServer } from 'http';
 import { Server, Socket } from 'socket.io';
 import cors from 'cors';
+import dotenv from 'dotenv';
+dotenv.config();
 
+const FRONTEND_URL = process.env.FRONTEND_URL
 const app = express();
 const server = createServer(app);
 const io = new Server(server, {
     cors: {
-        origin: 'http://localhost:5173', // Replace with your frontend URL
+        origin: FRONTEND_URL,
         methods: ['GET', 'POST']
     }
 });
 
 app.use(cors({
-    origin: 'http://localhost:5173' // Replace with your frontend URL
+    origin: FRONTEND_URL
 }));
 
 app.get('/', (req, res) => {
@@ -36,7 +39,7 @@ io.on('connection', (socket: Socket) => {
     });
 });
 
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
 });
